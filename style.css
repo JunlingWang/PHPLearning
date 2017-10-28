@@ -1,0 +1,62 @@
+td {
+    height:100px;
+    color:snow;
+	background-color: gray;
+}
+
+button.stone {
+    width:50px;
+    height:50px;
+    border-radius: 25px;
+	size: 100% 100%; 
+}
+
+#middle {
+	background-image: url("dot.png");/*set the background image*/
+	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
+}
+#a1 {
+	background-image: url("LT.png");/*set the background image*/
+	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
+}
+#a3 {
+	background-image: url("RT.png");/*set the background image*/
+	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
+}
+#c1 {
+	background-image: url("LB.png");/*set the background image*/
+	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
+}
+#c3 {
+	background-image: url("RB.png");/*set the background image*/
+	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
+}
+#te {
+	background-image: url("TE.png");/*set the background image*/
+	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
+}
+#re {
+	background-image: url("RE.png");/*set the background image*/
+	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
+}
+#be {
+	background-image: url("BE.png");/*set the background image*/
+	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
+}
+#le {
+	background-image: url("LE.png");/*set the background image*/
+	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
+}
+
+table#board {
+	border-collapse:collapse;	
+}
+
+#a1t {
+	background-image: url("white.png");	
+	background-size: 100% 100%; 
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
