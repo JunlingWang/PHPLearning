@@ -12,7 +12,7 @@ button.stone {
 }
 
 #middle {
-	background-image: url("dot.png");/*set the background image*/
+	background-image: url("img/dot.png");/*set the background image*/
 	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
 }
 #a1 {
