@@ -14,8 +14,6 @@ Detailed documentation is at the end of this file
 
 <body>
 
-<!--This element is to take the height of the window, so as to
- *vertically align the board-->
 <table id="frame" width="500" height="500">
   <tbody>
         <tr>

@@ -11,11 +11,10 @@ button.stone {
 	size: 100% 100%; 
 }
 
-/*This element is to take the height of the window, so as to
- *vertically align the board*/
 #frame {
    background-color:  #abb2b9  ;
-  	margin: auto;/*This is one of the many ways of horizontal align*/
+  	margin: auto;
+
 }
 
 #frame1 {
@@ -25,8 +24,8 @@ button.stone {
 table#board {
 	
 	border-collapse:collapse;	
-	margin: auto;/*This is one of the many ways of horizontal align*/
-	vertical-align: middle;/*vertical align*/
+	margin: auto;
+	vertical-align: middle;
 }
 
 #middle {
