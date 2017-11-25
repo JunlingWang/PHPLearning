@@ -47,8 +47,12 @@ $userName = "WJL";
 </head>
 
 <body>
-
-<!--display the first line's text-->
+<table id="outFrame" width="1000" border="1">
+  <tbody>
+    <tr>
+    
+      <td id="leftFrame" width="400"><div id="left"> 
+      <!--display the first line's text-->
 <p id="hello"> <?php echo "Hello World! " . $userName; ?> </p>
 
 <!--make database connection-->
@@ -122,6 +126,24 @@ Today's date:
       <td id="c3" onclick="onClick()"><div id="c3t"></div></td>
     </tr>
   </tbody>
+</table>  
+      </div></td>
+      
+      <td id="rightFrame"width="600">
+      <div id="right">
+        <h2>Unordered List with Disc Bullets</h2>
+          <ul style="list-style-type:disc">
+            <li>Coffee</li>
+            <li>Tea</li>
+            <li>Milk</li>
+          </ul>  
+      </div>
+      </td>
+      
+    </tr>
+  </tbody>
 </table>
+
+
 </body>
 </html>

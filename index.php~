@@ -40,15 +40,19 @@ $userName = "WJL";
 <html>
 
 <head>
-<title> Go Game </title>
+<title> Learn PHP </title>
 <!--import JavaScript file-->
 <script type="text/javascript" src="script.js"></script>
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-
-<!--display the first line's text-->
+<table id="outFrame" width="1000" border="1">
+  <tbody>
+    <tr>
+      <td id="leftFrame" width="400"><div id="left">
+      
+      <!--display the first line's text-->
 <p id="hello"> <?php echo "Hello World! " . $userName; ?> </p>
 
 <!--make database connection-->
@@ -123,5 +127,13 @@ Today's date:
     </tr>
   </tbody>
 </table>
+      
+      </div></td>
+      <td id="rightFrame"width="600"><div id="right">Right</div></td>
+    </tr>
+  </tbody>
+</table>
+
+
 </body>
 </html>

@@ -1,3 +1,9 @@
+html, 
+body {
+    height: 100%;
+}
+
+
 td {
     height:100px;
     color:snow;
@@ -15,6 +21,8 @@ button.stone {
  *vertically align the board*/
 #frame {
    background-color:  #abb2b9  ;
+   height: 400px;
+   width: 400px;
   	margin: auto;/*This is one of the many ways of horizontal align*/
 }
 

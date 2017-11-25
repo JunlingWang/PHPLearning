@@ -1,0 +1,22 @@
+
+#frame {
+   background-color: blue;
+  	margin: auto;/*This is one of the many ways of horizontal align*/
+  	/*This is a table cell, and it's child elements are vertically centered by default*/
+}
+
+#board {
+	width: 300px;
+	height: 300px;
+	background-color: red;
+	margin: auto;
+	vertical-align: top;/*vertical align*/
+
+}
+
+#wordWrap {
+	position: relative;
+   line-height: 200px;
+   text-align: center;
+   height: 100%; /*This make the div the same height of its parent, and the text goes to top.*/
+}

@@ -8,7 +8,27 @@ button.stone {
     width:50px;
     height:50px;
     border-radius: 25px;
-	size: 100% 100%; 
+	 size: 100% 100%; 
+}
+
+#leftFrame {
+  background-color: white;
+  color: black;}
+
+#rightFrame {
+  background-color: white;
+  color: black;
+  vertical-align: top;
+}
+
+#right {
+  width: 500px;
+  height: 100px;
+
+  vertical-align: top;
+  background-color: white;
+  color: black;
+  margin: auto;
 }
 
 #middle {
@@ -16,35 +36,35 @@ button.stone {
 	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
 }
 #a1 {
-	background-image: url("LT.png");/*set the background image*/
+	background-image: url("img/LT.png");/*set the background image*/
 	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
 }
 #a3 {
-	background-image: url("RT.png");/*set the background image*/
+	background-image: url("img/RT.png");/*set the background image*/
 	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
 }
 #c1 {
-	background-image: url("LB.png");/*set the background image*/
+	background-image: url("img/LB.png");/*set the background image*/
 	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
 }
 #c3 {
-	background-image: url("RB.png");/*set the background image*/
+	background-image: url("img/RB.png");/*set the background image*/
 	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
 }
 #te {
-	background-image: url("TE.png");/*set the background image*/
+	background-image: url("img/TE.png");/*set the background image*/
 	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
 }
 #re {
-	background-image: url("RE.png");/*set the background image*/
+	background-image: url("img/RE.png");/*set the background image*/
 	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
 }
 #be {
-	background-image: url("BE.png");/*set the background image*/
+	background-image: url("img/BE.png");/*set the background image*/
 	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
 }
 #le {
-	background-image: url("LE.png");/*set the background image*/
+	background-image: url("img/LE.png");/*set the background image*/
 	background-size: 100% 100%; /* scale the backgroud image to fit the size of the cell*/
 }
 
@@ -53,7 +73,7 @@ table#board {
 }
 
 #a1t {
-	background-image: url("white.png");	
+	background-image: url("img/white.png");	
 	background-size: 100% 100%; 
 	height: 100%;
 	width: 100%;

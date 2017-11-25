@@ -8,7 +8,27 @@ button.stone {
     width:50px;
     height:50px;
     border-radius: 25px;
-	size: 100% 100%; 
+	 size: 100% 100%; 
+}
+
+#leftFrame {
+  background-color: white;
+  color: black;}
+
+#rightFrame {
+  background-color: white;
+  color: black;
+  vertical-align: top;
+}
+
+#right {
+  width: 500px;
+  height: 100px;
+  line-height: 1.5; /*Hang ju*/
+  vertical-align: top;
+  background-color: white;
+  color: black;
+  margin: auto;
 }
 
 #middle {

@@ -9,14 +9,15 @@ Detailed documentation is at the end of this file
 <title> Go Game </title>
 <!--import JavaScript file-->
 <script type="text/javascript" src="script.js"></script>
+
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
-<body>
+<body onload="startPage()">
 
 <!--This element is to take the height of the window, so as to
  *vertically align the board-->
-<table id="frame" width="500" height="500">
+<table id="frame">
   <tbody>
         <tr>
         <td id="frame1">
@@ -45,8 +46,14 @@ Detailed documentation is at the end of this file
         </tr>
   </tbody>
 </table>
+
+<h1>A Web Page</h1>
+<p id="demo">A Paragraph</p>
+<button type="button" onclick="myFunction()">Try it</button>
+
 </body>
 </html>
+
 
 <!--
 PHP代码是运行在服务器端的，html和Javascript是运行在客户端的。
