@@ -3,6 +3,33 @@ body {
     height: 100%;
 }
 
+/*This element is to take the height of the window, so as to
+ *vertically align the board*/
+#frame {
+   background-color:  #abb2b9  ;
+  	margin: auto;/*This is one of the many ways of horizontal align*/
+}
+
+#frame1 {
+  background-color:  #abb2b9  ;
+}
+
+#frame2 {
+  background-color:  #27ae60  ;
+}
+
+#controlPanel {
+	background-color:  #5dade2 ;
+	width: 100px;
+	height: 300px;
+}
+
+table#board {
+	
+	border-collapse:collapse;	
+	margin: auto;/*This is one of the many ways of horizontal align*/
+	vertical-align: middle;/*vertical align*/
+}
 
 td {
     height:100px;
@@ -15,26 +42,6 @@ button.stone {
     height:50px;
     border-radius: 25px;
 	size: 100% 100%; 
-}
-
-/*This element is to take the height of the window, so as to
- *vertically align the board*/
-#frame {
-   background-color:  #abb2b9  ;
-   height: 400px;
-   width: 400px;
-  	margin: auto;/*This is one of the many ways of horizontal align*/
-}
-
-#frame1 {
-  background-color:  #abb2b9  ;
-}
-
-table#board {
-	
-	border-collapse:collapse;	
-	margin: auto;/*This is one of the many ways of horizontal align*/
-	vertical-align: middle;/*vertical align*/
 }
 
 #middle {

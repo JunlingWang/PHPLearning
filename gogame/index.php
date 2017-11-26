@@ -13,7 +13,7 @@ Detailed documentation is at the end of this file
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
-<body onload="startPage()">
+<body onload="startPage()"> <!--When the page is loaded, call this JS function-->
 
 <!--This element is to take the height of the window, so as to
  *vertically align the board-->
@@ -43,13 +43,18 @@ Detailed documentation is at the end of this file
 </table>
 
         </td>
+        <td id="frame2"><!--This is the container of the control panel-->
+<div id="controlPanel">
+<h1>控制面板</h1>
+<p id="demo">Control Panel</p>
+<button type="button" onclick="panelWork();">Try it</button>
+</div>     
+        </td>
         </tr>
   </tbody>
 </table>
 
-<h1>A Web Page</h1>
-<p id="demo">A Paragraph</p>
-<button type="button" onclick="myFunction()">Try it</button>
+
 
 </body>
 </html>
