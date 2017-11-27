@@ -36,6 +36,6 @@ table#board {
 	//height:100%;
    color:snow;
 	background-color: gray;
-	background-image: url("img/dot.png");
+	background-image: url("img/middle.png");
 	background-size: 100% 100%; 
 }

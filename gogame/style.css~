@@ -36,30 +36,6 @@ table#board {
 	//height:100%;
    color:snow;
 	background-color: gray;
-	background-image: url("img/dot.png");
+	background-image: url("img/middle.png");
 	background-size: 100% 100%; 
 }
-/*
-tr {
-	height:100%;
-}
-
-
-
-.tdDiv{
-	height: 100%;
-	width: 100%;
-}
-
-#_1_2d {
-	background-image: url("img/white.png");	
-	background-size: 100% 100%; 
-	padding: 0;
-	margin: 0;
-}
-
-#test {
-	background-color: red;	
-	height: 50px;
-}
-*/
