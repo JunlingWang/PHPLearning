@@ -22,23 +22,27 @@ Detailed documentation is at the end of this file
         <tr>
         <td id="frame1">
 
-<table id="board" width="300">
-  <tbody>
+<table id="board">
+  <tbody id="test">
+  <!--
       <tr>
-        <td id="a1" onclick="onClick()"><div id="a1t"></div></td>
-        <td id="te" onclick="onClick()"><div id="a2t"></div></td>
-        <td id="a3" onclick="onClick()"><div id="a3t"></div></td>
+      
+        <td class="tdElement" id="a1" onclick="onClick()"><div id="a1t"></div></td>
+        <td class="tdElement" id="te" onclick="onClick()"><div id="a2t"></div></td>
+        <td class="tdElement" id="a3" onclick="onClick()"><div id="a3t"></div></td>
+        
       </tr>
       <tr>
-        <td id="le" onclick="onClick()"><div id="b1t"></div></td>
-        <td id="middle" onclick="onClick()"><div id="b2t"></div></td>
-        <td id="re" onclick="onClick()"><div id="b3t"></div></td>
+        <td class="tdElement" id="le" onclick="onClick()"><div id="b1t"></div></td>
+        <td class="tdElement" id="middle" onclick="onClick()"><div id="b2t"></div></td>
+        <td class="tdElement" id="re" onclick="onClick()"><div id="b3t"></div></td>
       </tr>
       <tr>
-        <td id="c1" onclick="onClick()"><div id="c1t"></div></td>
-        <td id="be" onclick="onClick()"><div id="c2t"></div></td>
-        <td id="c3" onclick="onClick()"><div id="c3t"></div></td>
+        <td class="tdElement" id="c1" onclick="onClick()"><div id="c1t"></div></td>
+        <td class="tdElement" id="be" onclick="onClick()"><div id="c2t"></div></td>
+        <td class="tdElement" id="c3" onclick="onClick()"><div id="c3t"></div></td>
       </tr>
+      -->
   </tbody>
 </table>
 
