@@ -23,42 +23,26 @@ Detailed documentation is at the end of this file
         <td id="frame1">
 
 <table id="board">
-  <tbody id="test">
-  <!--
-      <tr>
-      
-        <td class="tdElement" id="a1" onclick="onClick()"><div id="a1t"></div></td>
-        <td class="tdElement" id="te" onclick="onClick()"><div id="a2t"></div></td>
-        <td class="tdElement" id="a3" onclick="onClick()"><div id="a3t"></div></td>
-        
-      </tr>
-      <tr>
-        <td class="tdElement" id="le" onclick="onClick()"><div id="b1t"></div></td>
-        <td class="tdElement" id="middle" onclick="onClick()"><div id="b2t"></div></td>
-        <td class="tdElement" id="re" onclick="onClick()"><div id="b3t"></div></td>
-      </tr>
-      <tr>
-        <td class="tdElement" id="c1" onclick="onClick()"><div id="c1t"></div></td>
-        <td class="tdElement" id="be" onclick="onClick()"><div id="c2t"></div></td>
-        <td class="tdElement" id="c3" onclick="onClick()"><div id="c3t"></div></td>
-      </tr>
-      -->
+  <tbody id="boardTableBody">
+  <!--Table code is injected here.-->
   </tbody>
 </table>
 
         </td>
         <td id="frame2"><!--This is the container of the control panel-->
 <div id="controlPanel">
-<h1>控制面板</h1>
+<h1>控制台</h1>
 <p id="demo">Control Panel</p>
 <button type="button" onclick="panelWork();">Try it</button>
+<p id="testResult">Test result</p>
+<button type="button" onclick="testButton();">Test Button</button>
 </div>     
         </td>
         </tr>
   </tbody>
 </table>
 
-
+<!--make database connection-->
 
 </body>
 </html>
