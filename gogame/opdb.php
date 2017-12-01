@@ -22,18 +22,8 @@ if ($res->num_rows > 0){
 }else{
 echo "No";
 }
-/*
-if ($res->num_rows > 0){
-while($row = $res->fetch_assoc()) {
-	$state = $row["State"];
-	echo '19';
-}
 
-}else{
-echo '18';
-}
-*/
-
+$mysqli->close(); // Close the database connection.
 ?>
 <?php
 

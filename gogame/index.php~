@@ -11,6 +11,7 @@ Detailed documentation is at the end of this file
 <script type="text/javascript" src="script.js"></script>
 
 <link rel="stylesheet" type="text/css" href="style.css">
+
 </head>
 
 <body onload="startPage()"> <!--When the page is loaded, call this JS function-->
@@ -34,15 +35,14 @@ Detailed documentation is at the end of this file
 <h1>控制台</h1>
 <p id="demo">Control Panel</p>
 <button type="button" onclick="panelWork();">Try it</button>
-<p id="testResult">Test result</p>
+<p id="testResult">Test result</b>
+</p>
 <button type="button" onclick="testButton();">Test Button</button>
 </div>     
         </td>
         </tr>
   </tbody>
 </table>
-
-<!--make database connection-->
 
 </body>
 </html>

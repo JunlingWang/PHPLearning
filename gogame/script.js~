@@ -4,15 +4,14 @@ stepNum = 0; // When the game begins, the step number is zero.
 
 function panelWork() {
     document.getElementById("demo").innerHTML = "It works";
-    updateLocalState([0,0],"white");
+    changeLocalState([0,1],"white");
 }
 
 function testButton() {
-	databaseTest();
+	makeAMove(0,6);
 }
 
 function databaseTest(){
-
 if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
             xmlhttp = new XMLHttpRequest();
@@ -23,7 +22,6 @@ if (window.XMLHttpRequest) {
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
 		//html tag with id "info" is set as target of this function
-			    updateLocalState([0,0],"white");
                 document.getElementById("testResult").innerHTML = this.responseText;
             }
 	};  
@@ -71,7 +69,7 @@ return tableHtmlCode;
 function creatTdElement(rowNum,colNum) {
 	var tdId = createTdId(rowNum,colNum); 
 	var divId = tdId + 'd'; 
-	var tdElmentCode = '<td class="tdElement" id="' + tdId + '" onclick="onClick()"><div id="' + divId + '"></div></td>';
+	var tdElmentCode = '<td class="tdElement" id="' + tdId + '" onclick="onClick(this.id)"><div id="' + divId + '"></div></td>';
 	return tdElmentCode;
 }
 
@@ -152,13 +150,112 @@ window.onresize = function() {  /*this function is called when the window is res
 * This piece of code realizes and controls the Go game moves,
 * basically putting stones to and removing them from the board.
 */
-function updateLocalState(positionArray=[0,0],resultState='empty') { 
+function onClick(clickedID) {
+	id = clickedID;
+	rowNum = Number(id.substring(1, 3)); //i0000
+	colNum = Number(id.substring(3)); ; //i0000
+	makeAMove(rowNum,colNum);
+}
+
+function changeLocalState(positionArray=[0,0],resultState='empty') { 
 	var positionID = createTdId(positionArray[0],positionArray[1]); 
 	var posCode = generatePosCode(positionArray); 
 	document.getElementById(positionID).style.backgroundImage = 'url("img/' + posCode + resultState + '.png")';
 }
 
+function resetBoardDatabase() {
+	if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+		//html tag with id "info" is set as target of this function
+                document.getElementById("testResult").innerHTML = this.responseText;
+            }
+	};  
+	//calls the opdb.php file, which is in the save server folder.
+	xmlhttp.open("GET", "resetBoardDatabase.php", true);
+	xmlhttp.send();
+}
 
+function updatePosition(rowNum, colNum) {
+	if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+		//html tag with id "info" is set as target of this function
+               var res = this.responseText;
+               var resStr = res.toString(); 
+               if (resStr.includes("black")){
+               	state = "black";
+               } else if (resStr.includes("white")) {
+               	state = "white";
+               } else {
+               	state = "empty";
+               }
+               document.getElementById("testResult").innerHTML = resStr;
+               changeLocalState([rowNum, colNum], state);
+            }
+	};  
+	var id = createTdId(rowNum, colNum)
+	//calls the opdb.php file, which is in the save server folder.
+	xmlhttp.open("GET", "updatePosition.php?id=" + id, true);
+	xmlhttp.send();
+}
+
+function updateWholeBoard() {
+	for (i = 0; i < tableSize; i++) {
+		for (j = 0; j < tableSize; j++) { // Different indexes (like i,j,k) should be used in multi-layer loops.
+			updatePosition(i, j);
+			
+   	}
+
+	}
+}
+
+function makeAMove(rowNum,colNum) {
+	var colorOfThisStep = "black";
+	if (stepNum % 2 == 0) {
+		var colorOfThisStep = "black";
+	} else {
+		var colorOfThisStep = "black";
+	}
+	writeToDB(rowNum,colNum,colorOfThisStep);
+	updatePosition(rowNum, colNum);
+	stepNum += 1;
+}
+
+function writeToDB(rowNum,colNum, state) {
+	var id = createTdId(rowNum, colNum);
+	if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+		//html tag with id "info" is set as target of this function
+       document.getElementById("testResult").innerHTML = id + this.responseText;
+            }
+	};  
+
+	//calls the opdb.php file, which is in the save server folder.
+	xmlhttp.open("GET", "writeToDB.php?msg=" + id + state, true);
+	xmlhttp.send();
+}
 /*END OF THE CODE FOR THE MOVES******************************************************/
+
+
  
         
