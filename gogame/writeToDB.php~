@@ -10,27 +10,47 @@ $msg = $_REQUEST["msg"];// receive the parameter n from the JavaScript code
 $id = substr($msg,0,5);
 $state = substr($msg,5);
 // Make database connection.
-$mysqli = new mysqli("localhost", "id302411_jlw", "ap.PG.00", "id302411_gogame");
-// The 4th parameter is the name of the database. It is important to specify
-// the name of the database because there might be several databases under on username.
-if ($mysqli->connect_errno) {
-    echo "Failed";
-} else {
-	 echo "successful";
-}
-   
-   $editRow = "UPDATE Board SET State = '" . $state . "' WHERE PositionID = '" . $id . "';";
-		// Pay attention on the single quotation marks around the double quotation marks
-		// around $positionID
-	if ($mysqli->query($editRow) === TRUE) {
-   	$result = "Insert successful";
+
+$writeComplete = FALSE;
+$writeAttemptTime = 1;
+while($writeComplete == FALSE && $writeAttemptTime < 1000) {
+	$mysqli = new mysqli("localhost", "wangjunling", "ma!XR!04", "gogame");
+	// The 4th parameter is the name of the database. It is important to specify
+	// the name of the database because there might be several databases under on username.
+	if ($mysqli->connect_errno) {
+	    echo "DBFailed";
 	} else {
-   	$result = "Error: " . $editRow . "<br>" . $mysqli->error;
+		 echo "DBsuccessful";
+	}
+   
+	   $editRow = "UPDATE Board SET State = '" . $state . "' WHERE PositionID = '" . $id . "';";
+			// Pay attention on the single quotation marks around the double quotation marks
+			// around $positionID
+		if ($mysqli->query($editRow) === TRUE) {
+			$checkState = "check";
+			$checkRes = $mysqli->query("SELECT * FROM Board WHERE PositionID='".$id."'");
+			if ($checkRes->num_rows > 0){
+    			while($row = $res->fetch_assoc()) {
+       			$checkState = $row['State'];
+    			}
+    			if($checkState == $state) {
+    				$writeComplete = TRUE;
+    				$result = "Edit successful";
+    			}else {
+    				$result = "Edit Error1";
+	   			$writeAttemptTime += 1;
+    			}
+			}else{
+    			$result = "Edit Error2";
+	   		$writeAttemptTime += 1;			
+			}
+		} else {
+	   	$result = "Edit Error3";
+	   	$writeAttemptTime += 1;
+	}
+	echo $id . $result;
+	$mysqli->close();
 }
-
-echo $id;
-
-$mysqli->close();
 ?>
 
 </body>

@@ -1,6 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
+<!--File name writeStepNumToDB.php-->
 </head>
 <body>
 <?php
@@ -8,7 +9,8 @@
 
 $msg = $_REQUEST["msg"];// receive the parameter n from the JavaScript code
 $id = substr($msg,0,5);
-$state = substr($msg,5);
+$step = substr($msg,5);
+$stepNum = (int)$step;
 // Make database connection.
 
 $writeComplete = FALSE;
@@ -23,29 +25,13 @@ while($writeComplete == FALSE && $writeAttemptTime < 1000) {
 		 echo "DBsuccessful";
 	}
    
-	   $editRow = "UPDATE Board SET State = '" . $state . "' WHERE PositionID = '" . $id . "';";
+	   $editRow = "UPDATE History SET stepNum = " . $stepNum . ";";
 			// Pay attention on the single quotation marks around the double quotation marks
 			// around $positionID
 		if ($mysqli->query($editRow) === TRUE) {
-			$checkState = "check";
-			$checkRes = $mysqli->query("SELECT * FROM Board WHERE PositionID='".$id."'");
-			if ($checkRes->num_rows > 0){
-    			while($row = $res->fetch_assoc()) {
-       			$checkState = $row['State'];
-    			}
-    			if($checkState == $state) {
-    				$writeComplete = TRUE;
-    				$result = "Edit successful";
-    			}else {
-    				$result = "Edit Error1";
-	   			$writeAttemptTime += 1;
-    			}
-			}else{
-    			$result = "Edit Error2";
-	   		$writeAttemptTime += 1;			
-			}
+    				$result = "stepNumWrite successful";
 		} else {
-	   	$result = "Edit Error3";
+	   	$result = "stepNumWriteError";
 	   	$writeAttemptTime += 1;
 	}
 	echo $id . $result;

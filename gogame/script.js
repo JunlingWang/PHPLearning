@@ -1,10 +1,9 @@
 
 tableSize = 19; // Global variable, whose default value is 19
-stepNum = 0; // When the game begins, the step number is zero.
 
-function panelWork() {
-    document.getElementById("demo").innerHTML = "It works";
-    changeLocalState([0,1],"white");
+function clearBoard(){
+    document.getElementById("clear").innerHTML = "It works";
+    resetBoardDatabase();
 }
 
 function testButton() {
@@ -223,18 +222,22 @@ function updateWholeBoard() {
 }
 
 function makeAMove(rowNum,colNum) {
+
+	var stepNum = 333;//Number(getStepNum());
 	var colorOfThisStep = "black";
 	if (stepNum % 2 == 0) {
 		colorOfThisStep = "black";
 	} else {
-		colorOfThisStep = "black";
+		colorOfThisStep = "white";
 	}
 	writeToDB(rowNum,colNum,colorOfThisStep);
-	updatePosition(rowNum, colNum);
 	stepNum += 1;
+	writeToDB(rowNum,colNum,stepNum);
+	updatePosition(rowNum, colNum);
+	readFromStepNum();
 }
 
-function writeToDB(rowNum,colNum, state) {
+function writeToDB(rowNum,colNum, info) {
 	var id = createTdId(rowNum, colNum);
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -249,11 +252,42 @@ function writeToDB(rowNum,colNum, state) {
        document.getElementById("testResult").innerHTML = id + this.responseText;
             }
 	};  
-
+	if (typeof info == "string") {
+		var state = info;
+		xmlhttp.open("GET", "writeToDB.php?msg=" + id + state, true);
+	}else if (typeof info == "number") {
+		var stepNum = info;
+		xmlhttp.open("GET", "writeStepNumToDB.php?msg=" + id + stepNum, true);	
+	}
 	//calls the opdb.php file, which is in the save server folder.
-	xmlhttp.open("GET", "writeToDB.php?msg=" + id + state, true);
 	xmlhttp.send();
 }
+
+function readFromStepNum() 
+	{
+	if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+		    //html tag with id "info" is set as target of this function
+		      	document.getElementById("stepNum").innerHTML = this.responseText;
+   				//var res = 123;//this.responseText;
+            }
+			};
+	//calls the opdb.php file, which is in the save server folder.
+	xmlhttp.open("GET", "readFromStepNum.php", true);
+	xmlhttp.send();
+	}
+	
+function getStepNum() {
+var num = document.getElementById("stepNum").innerHTML;
+return num;
+};
 /*END OF THE CODE FOR THE MOVES******************************************************/
 
 

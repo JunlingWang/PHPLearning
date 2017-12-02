@@ -6,8 +6,6 @@
 </head>
 <body>
 <?php
-$id = $_REQUEST["id"];// receive the parameter n from the JavaScript code
-
 $updateComplete = FALSE;
 $updatAttemptTime = 1;
 // This loop is to guarantee that if the database visit fails,
@@ -18,22 +16,26 @@ while($updateComplete == FALSE && $updatAttemptTime < 1000) {
 	$mysqli = new mysqli("localhost", "wangjunling", "ma!XR!04", "gogame");
 	// The 4th parameter is the name of the database. It is important to specify
 	// the name of the database because there might be several databases under on username.
-
+/*
 	if ($mysqli->connect_errno) {
-   	 echo "Failed";
+   	 echo NULL;
 	} else {
-		 echo "DB for update successful";
+		 echo NULL;
 	}
+*/
 
-
-		$res = $mysqli->query("SELECT * FROM Board WHERE PositionID='".$id."'");
+		$res = $mysqli->query("SELECT * FROM History");
 		if ($res->num_rows > 0){
     		while($row = $res->fetch_assoc()) {
-       		echo $row['State'];
-       		$updateComplete = TRUE;
+    			$step = $row['stepNum'];
+    			if($stepNum >= 0) {
+    				echo $step;
+    				$updateComplete = TRUE;
+    			}else{
+					$updatAttemptTime += 1;
+				}
     		}
 		}else{
-		echo "No" . $updatAttemptTime;
 		$updatAttemptTime += 1;
 	}
 	$mysqli->close();

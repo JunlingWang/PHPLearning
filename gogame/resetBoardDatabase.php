@@ -8,7 +8,7 @@
 <?php
 $boardSize = 19;
 // Make database connection.
-$mysqli = new mysqli("localhost", "id302411_jlw", "ap.PG.00", "id302411_gogame");
+$mysqli = new mysqli("localhost", "wangjunling", "ma!XR!04", "gogame");
 // The 4th parameter is the name of the database. It is important to specify
 // the name of the database because there might be several databases under on username.
 if ($mysqli->connect_errno) {
