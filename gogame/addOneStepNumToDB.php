@@ -6,13 +6,7 @@
 <body>
 <?php
 
-
-$msg = $_REQUEST["msg"];// receive the parameter n from the JavaScript code
-$id = substr($msg,0,5);
-$step = substr($msg,5);
-$stepNum = (int)$step;
 // Make database connection.
-
 $writeComplete = FALSE;
 $writeAttemptTime = 1;
 while($writeComplete == FALSE && $writeAttemptTime < 1000) {
@@ -24,8 +18,15 @@ while($writeComplete == FALSE && $writeAttemptTime < 1000) {
 	} else {
 		 echo "DBsuccessful";
 	}
-   
-	   $editRow = "UPDATE History SET stepNum = " . $stepNum . ";";
+      
+      $res = $mysqli->query("SELECT * FROM History");
+		if ($res->num_rows > 0){
+    		while($row = $res->fetch_assoc()) {
+    			$step = $row['stepNum'];
+    		}
+		}
+      
+	   $editRow = "UPDATE History SET stepNum = " . (string)$step . " + 1;";
 			// Pay attention on the single quotation marks around the double quotation marks
 			// around $positionID
 		if ($mysqli->query($editRow) === TRUE) {

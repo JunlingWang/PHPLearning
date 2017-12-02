@@ -12,7 +12,7 @@ $updatAttemptTime = 1;
 // it will be revisit again, until it's successful
 // $updateComplete will be changed to TRUE when it's successful and the loop ends
 // The arguement $updatAttemptTime < 1000 is used to avoid infinite loop, usually it will be smaller than 20.
-while($updateComplete == FALSE && $updatAttemptTime < 1000) {
+while($updateComplete == FALSE && $updatAttemptTime < 100) {
 	$mysqli = new mysqli("localhost", "wangjunling", "ma!XR!04", "gogame");
 	// The 4th parameter is the name of the database. It is important to specify
 	// the name of the database because there might be several databases under on username.
@@ -28,7 +28,7 @@ while($updateComplete == FALSE && $updatAttemptTime < 1000) {
 		if ($res->num_rows > 0){
     		while($row = $res->fetch_assoc()) {
     			$step = $row['stepNum'];
-    			if($stepNum >= 0) {
+    			if($step >= 0) {
     				echo $step;
     				$updateComplete = TRUE;
     			}else{
@@ -40,11 +40,6 @@ while($updateComplete == FALSE && $updatAttemptTime < 1000) {
 	}
 	$mysqli->close();
 }
-
-
-
-
-
 ?>
 
 </body>

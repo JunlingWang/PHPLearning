@@ -33,7 +33,7 @@ Detailed documentation is at the end of this file
         <td id="frame2"><!--This is the container of the control panel-->
 <div id="controlPanel">
 <h1>控制台</h1>
-<p id="stepNum"></p>
+<p id="stepNum">222</p>
 <p id="clear">清盘Clearboard</p>
 <button type="button" onclick="clearBoard();">清盘Clearboard</button>
 <p id="testResult">Test result</b>

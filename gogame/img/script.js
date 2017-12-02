@@ -231,12 +231,13 @@ function makeAMove(rowNum,colNum) {
 		colorOfThisStep = "white";
 	}
 	writeToDB(rowNum,colNum,colorOfThisStep);
-	addOneStepNumToDB();
+	stepNum += 1;
+	writeToDB(rowNum,colNum,stepNum);
 	updatePosition(rowNum, colNum);
-	readFromStepNum();
+	//readFromStepNum();
 }
 
-function writeToDB(rowNum,colNum, state) {
+function writeToDB(rowNum,colNum, info) {
 	var id = createTdId(rowNum, colNum);
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -251,32 +252,16 @@ function writeToDB(rowNum,colNum, state) {
        document.getElementById("testResult").innerHTML = id + this.responseText;
             }
 	};  
+	if (typeof info == "string") {
+		var state = info;
 		xmlhttp.open("GET", "writeToDB.php?msg=" + id + state, true);
+	}else if (typeof info == "number") {
+		var stepNum = info;
+		xmlhttp.open("GET", "writeStepNumToDB.php?msg=" + id + stepNum, true);	
+	}
 	//calls the opdb.php file, which is in the save server folder.
 	xmlhttp.send();
 }
-
-function addOneStepNumToDB() {
-	if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        /*
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-		//html tag with id "info" is set as target of this function
-       document.getElementById("testResult").innerHTML = id + this.responseText;
-            }
-	}; */ 
-		xmlhttp.open("GET", "addOneStepNumToDB.php", true);	
-	//calls the opdb.php file, which is in the save server folder.
-	xmlhttp.send();
-}
-
-
 
 function readFromStepNum() 
 	{
@@ -291,7 +276,7 @@ function readFromStepNum()
             if (this.readyState == 4 && this.status == 200) {
 		    //html tag with id "info" is set as target of this function
 		         var resString = this.responseText;
-		      	document.getElementById("stepNum").innerHTML = resString.trim();
+		      	document.getElementById("stepNum").innerHTML = "400";//resString.trim();
    				//var res = 123;//this.responseText;
             }
 			};
