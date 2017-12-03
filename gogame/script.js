@@ -1,13 +1,16 @@
 
 tableSize = 19; // Global variable, whose default value is 19
 
+
+
 function clearBoard(){
     document.getElementById("clear").innerHTML = "It works";
     resetBoardDatabase();
+    updateWholeBoard();
 }
 
 function testButton() {
-	makeAMove(0,6);
+    updateWholeBoard();
 }
 
 function databaseTest(){
@@ -28,15 +31,6 @@ if (window.XMLHttpRequest) {
 	xmlhttp.open("GET", "opdb.php", true);
 	xmlhttp.send();
 }
-
-/*Functions inside this function will be called when the window is opened*/
-function startPage() {
-	 injectTableCode();/*Create the Go game board*/
-    fitSize();/*Fit the container of the Go game board fit the size of the window*/
-    editGrid();
-    // The order of these functions are important. You can't operate on code that hasn't been generated.
-}
-
 /*BOARD TABLE GENERATING CODE****************************************************
 *The board of the Go game is built with an html table, but 
 *the html code of the table is too long to be hand written.
@@ -139,7 +133,6 @@ function generatePosCode(positionArry=[0,0]) {
 			}
 			return posCode;
 } 
-
 window.onresize = function() {  /*this function is called when the window is resized*/
                 fitSize();
             };
@@ -177,11 +170,11 @@ function resetBoardDatabase() {
             }
 	};  
 	//calls the opdb.php file, which is in the save server folder.
-	xmlhttp.open("GET", "resetBoardDatabase.php", true);
+	xmlhttp.open("GET", "clearBoard.php", true);
 	xmlhttp.send();
 }
 
-function updatePosition(rowNum, colNum) {
+function updatePosition(rowNum, colNum,callback) {
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
             xmlhttp = new XMLHttpRequest();
@@ -209,6 +202,7 @@ function updatePosition(rowNum, colNum) {
 	//calls the opdb.php file, which is in the save server folder.
 	xmlhttp.open("GET", "updatePosition.php?id=" + id, true);
 	xmlhttp.send();
+	callback(num);
 }
 
 function updateWholeBoard() {
@@ -221,23 +215,68 @@ function updateWholeBoard() {
 	}
 }
 
+/***************************************************************************************************/
 function makeAMove(rowNum,colNum) {
+	dbToDiv(rowNum,colNum,divToLocal);
+}
 
-	var stepNum = Number(getStepNum());
+function dbToDiv(rowNum,colNum,callback) {
+	if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+		    //html tag with id "info" is set as target of this function
+		         var res = this.responseText;
+		      	document.getElementById("stepNum").innerHTML = res;
+		      	callback(rowNum,colNum,localToDB); // divToLocal()
+            }
+			};
+	//calls the opdb.php file, which is in the save server folder.
+	xmlhttp.open("GET", "readFromStepNum.php", true);
+	xmlhttp.send();
+}
+	
+function divToLocal(rowNum,colNum,callback) {
+	var res = document.getElementById("stepNum").innerText;
+	var numStr = res.substring(5);
+	var getNum = parseInt(numStr);
 	var colorOfThisStep = "black";
-	if (stepNum % 2 == 0) {
+	if (getNum % 2 == 0) {
 		colorOfThisStep = "black";
 	} else {
 		colorOfThisStep = "white";
 	}
-	writeToDB(rowNum,colNum,colorOfThisStep);
-	addOneStepNumToDB();
-	updatePosition(rowNum, colNum);
-	readFromStepNum();
+   changeLocalState([rowNum, colNum], colorOfThisStep);
+	var newNum = getNum + 1;
+	var id = createTdId(rowNum, colNum);
+	callback(id,newNum,colorOfThisStep); // localToDB()
+}	
+
+function localToDB(id,stepNum,colorOfThisStep) {
+writeStepToDB(id,stepNum);
+writeToDB(id,colorOfThisStep);
 }
 
-function writeToDB(rowNum,colNum, state) {
-	var id = createTdId(rowNum, colNum);
+function writeStepToDB(id,stepNum) {
+	var numStr = stepNum.toString();
+	if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+	xmlhttp.open("GET", "addOneStepNumToDB.php?msg=" + id + numStr, true);	
+	xmlhttp.send();
+}
+
+function writeToDB(id,colorOfThisStep) {
+	document.getElementById("testResult").innerHTML = "writeToDB.php?msg=" + id + colorOfThisStep;
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
             xmlhttp = new XMLHttpRequest();
@@ -248,38 +287,22 @@ function writeToDB(rowNum,colNum, state) {
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
 		//html tag with id "info" is set as target of this function
-       document.getElementById("testResult").innerHTML = id + this.responseText;
+       document.getElementById("testResult").innerHTML = id;// + this.responseText;
             }
 	};  
-		xmlhttp.open("GET", "writeToDB.php?msg=" + id + state, true);
-	//calls the opdb.php file, which is in the save server folder.
+	xmlhttp.open("GET", "writeToDB.php?msg=" + id + colorOfThisStep, true);
 	xmlhttp.send();
 }
+/*END OF THE CODE FOR THE MOVES******************************************************/
 
-function addOneStepNumToDB() {
-	if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        /*
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-		//html tag with id "info" is set as target of this function
-       document.getElementById("testResult").innerHTML = id + this.responseText;
-            }
-	}; */ 
-		xmlhttp.open("GET", "addOneStepNumToDB.php", true);	
-	//calls the opdb.php file, which is in the save server folder.
-	xmlhttp.send();
+/*********************************************************************************
+*Dynamically update the board*/
+function realtimeupdate() {
+	//setInterval is a function that repeat an operation in a specified interval(in milliseconds).
+   myVar = setInterval(detectStepNum,1000);
 }
 
-
-
-function readFromStepNum() 
-	{
+function detectStepNum() {
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
             xmlhttp = new XMLHttpRequest();
@@ -291,21 +314,34 @@ function readFromStepNum()
             if (this.readyState == 4 && this.status == 200) {
 		    //html tag with id "info" is set as target of this function
 		         var resString = this.responseText;
-		      	document.getElementById("stepNum").innerHTML = resString.trim();
+		      	 var dbStr = resString.trim();
+		      	 var dbNum = parseInt(dbStr);
+		      	 var localStr = document.getElementById("stepNum").innerText;
+		      	 var localNum = parseInt(localStr);
+		      	 if (dbNum-localNum>1) {}
+		      	 
+		      	 
+		      	 
+		      	callback(rowNum,colNum,localToDB); // divToLocal()
    				//var res = 123;//this.responseText;
             }
 			};
 	//calls the opdb.php file, which is in the save server folder.
 	xmlhttp.open("GET", "readFromStepNum.php", true);
 	xmlhttp.send();
-	}
-	
-function getStepNum() {
-var num = document.getElementById("stepNum").innerText;
-return num;
-};
-/*END OF THE CODE FOR THE MOVES******************************************************/
+}
 
+
+/*************************************************************************************/
+
+
+/*Functions inside this function will be called when the window is opened*/
+function startPage() {
+	 injectTableCode();/*Create the Go game board*/
+    fitSize();/*Fit the container of the Go game board fit the size of the window*/
+    editGrid();
+    // The order of these functions are important. You can't operate on code that hasn't been generated.
+}
 
  
         

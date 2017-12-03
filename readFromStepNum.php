@@ -28,9 +28,8 @@ while($updateComplete == FALSE && $updatAttemptTime < 100) {
 		if ($res->num_rows > 0){
     		while($row = $res->fetch_assoc()) {
     			$step = $row['stepNum'];
-    			$id = $row['PositionID'];
     			if($step >= 0) {
-    				echo $id . (string)$step;
+    				echo $step;
     				$updateComplete = TRUE;
     			}else{
 					$updatAttemptTime += 1;

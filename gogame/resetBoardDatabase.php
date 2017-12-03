@@ -43,7 +43,7 @@ for ($i = 0; $i < $boardSize; $i++) {
    //echo $positionID;
    
    $addRow = "INSERT INTO Board (PositionID, State, rowNum, colNum)
-		VALUES ('" . $positionID . "', 'black', " . $rowCode . ", " . $colCode . ")"; 
+		VALUES ('" . $positionID . "', 'empty', " . $rowCode . ", " . $colCode . ")"; 
 		// Pay attention on the single quotation marks around the double quotation marks
 		// around $positionID
 	if ($mysqli->query($addRow) === TRUE) {

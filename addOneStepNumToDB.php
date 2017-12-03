@@ -6,9 +6,8 @@
 <body>
 <?php
 $msg = $_REQUEST["msg"];// receive the parameter n from the JavaScript code
-$id = substr($msg,0,5);
-$step = substr($msg,5);
-
+$step = $msg;
+// Make database connection.
 // Make database connection.
 $writeComplete = FALSE;
 $writeAttemptTime = 1;
@@ -22,7 +21,7 @@ while($writeComplete == FALSE && $writeAttemptTime < 10) {
 		 echo "DBsuccessful";
 	}
      
-	   $editRow = "UPDATE History SET stepNum = " . $step . ", PositionID = '" . $id . "';";
+	   $editRow = "UPDATE History SET stepNum = " . $step . ";";
 			// Pay attention on the single quotation marks around the double quotation marks
 			// around $positionID
 		if ($mysqli->query($editRow) === TRUE) {

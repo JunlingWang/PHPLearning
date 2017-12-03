@@ -53,6 +53,12 @@ $userName = "WJL";
     
       <td id="leftFrame" width="400"><div id="left"> 
       <!--display the first line's text-->
+<p>Number echoed from database:</p>    
+<p id="fromDB"></p>      
+<p>Number after calculation:</p>      
+<p id="afterCal"></p>    
+<button onClick="dbOpr()">Click</button>  
+      
 <p id="hello"> <?php echo "Hello World! " . $userName; ?> </p>
 
 <!--make database connection-->
