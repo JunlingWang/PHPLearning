@@ -1,16 +1,17 @@
-
 tableSize = 19; // Global variable, whose default value is 19
-
-
+autoUpdatPause = false; 
+testIndex = 0;
+PreviousMoveID ="i0000";
 
 function clearBoard(){
+	 autoUpdatPause = true; 
     document.getElementById("clear").innerHTML = "It works";
-    resetBoardDatabase();
-    updateWholeBoard();
+    writeStepToDB(0, 0,0,dbToDiv)
+    clearLocalBoard();
 }
 
 function testButton() {
-    updateWholeBoard();
+    getLocaState(0,0);
 }
 
 function databaseTest(){
@@ -62,7 +63,7 @@ return tableHtmlCode;
 function creatTdElement(rowNum,colNum) {
 	var tdId = createTdId(rowNum,colNum); 
 	var divId = tdId + 'd'; 
-	var tdElmentCode = '<td class="tdElement" id="' + tdId + '" onclick="onClick(this.id)"><div id="' + divId + '"></div></td>';
+	var tdElmentCode = '<td class="tdElement" id="' + tdId + '" onclick="onClick(this.id)">•<div class="divElement" id="' + divId + '">empty</div></td>';
 	return tdElmentCode;
 }
 
@@ -106,6 +107,17 @@ function editGrid() {
 	}
 }  
 
+function clearLocalBoard() {
+	for (i = 0; i < tableSize; i++) {
+		for (j = 0; j < tableSize; j++) { // Different indexes (like i,j,k) should be used in multi-layer loops.
+			var positionID = createTdId(i,j); 
+			var posCode = generatePosCode([i,j]);
+			document.getElementById(positionID).style.backgroundImage = 'url("img/' + posCode + 'empty.png")';
+			document.getElementById(positionID+"d").innerText = "empty";
+   	}
+	}
+	document.getElementById(PreviousMoveID).style.color = "rgba(0, 0, 0, 0)";
+}
 // Generate a part of the image code according to the ID,
 // because in different position the background of the picture is different.
 function generatePosCode(positionArry=[0,0]) { 
@@ -143,6 +155,7 @@ window.onresize = function() {  /*this function is called when the window is res
 * basically putting stones to and removing them from the board.
 */
 function onClick(clickedID) {
+	autoUpdatPause = true; 
 	id = clickedID;
 	rowNum = Number(id.substring(1, 3)); //i0000
 	colNum = Number(id.substring(3)); ; //i0000
@@ -153,6 +166,7 @@ function changeLocalState(positionArray=[0,0],resultState='empty') {
 	var positionID = createTdId(positionArray[0],positionArray[1]); 
 	var posCode = generatePosCode(positionArray); 
 	document.getElementById(positionID).style.backgroundImage = 'url("img/' + posCode + resultState + '.png")';
+	document.getElementById(positionID + "d").innerHTML = resultState;
 }
 
 function resetBoardDatabase() {
@@ -174,7 +188,7 @@ function resetBoardDatabase() {
 	xmlhttp.send();
 }
 
-function updatePosition(rowNum, colNum,callback) {
+function updatePosition(rowNum, colNum) {
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
             xmlhttp = new XMLHttpRequest();
@@ -198,11 +212,10 @@ function updatePosition(rowNum, colNum,callback) {
                changeLocalState([rowNum, colNum], state);
             }
 	};  
-	var id = createTdId(rowNum, colNum)
+	var id = createTdId(rowNum, colNum);
 	//calls the opdb.php file, which is in the save server folder.
 	xmlhttp.open("GET", "updatePosition.php?id=" + id, true);
 	xmlhttp.send();
-	callback(num);
 }
 
 function updateWholeBoard() {
@@ -217,28 +230,8 @@ function updateWholeBoard() {
 
 /***************************************************************************************************/
 function makeAMove(rowNum,colNum) {
-	dbToDiv(rowNum,colNum,divToLocal);
-}
-
-function dbToDiv(rowNum,colNum,callback) {
-	if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-		    //html tag with id "info" is set as target of this function
-		         var res = this.responseText;
-		      	document.getElementById("stepNum").innerHTML = res;
-		      	callback(rowNum,colNum,localToDB); // divToLocal()
-            }
-			};
-	//calls the opdb.php file, which is in the save server folder.
-	xmlhttp.open("GET", "readFromStepNum.php", true);
-	xmlhttp.send();
+	divToLocal(rowNum,colNum,localToDB);
+	redDot(rowNum,colNum);
 }
 	
 function divToLocal(rowNum,colNum,callback) {
@@ -246,36 +239,29 @@ function divToLocal(rowNum,colNum,callback) {
 	var numStr = res.substring(5);
 	var getNum = parseInt(numStr);
 	var colorOfThisStep = "black";
-	if (getNum % 2 == 0) {
-		colorOfThisStep = "black";
-	} else {
-		colorOfThisStep = "white";
+	if (getLocaState(rowNum,colNum) == "empty") {
+		if (getNum % 2 == 0) {
+			colorOfThisStep = "black";
+		} else {
+			colorOfThisStep = "white";
+		}	
+	}else {
+			colorOfThisStep = "empty";
+			getNum -= 1;
 	}
    changeLocalState([rowNum, colNum], colorOfThisStep);
 	var newNum = getNum + 1;
 	var id = createTdId(rowNum, colNum);
-	callback(id,newNum,colorOfThisStep); // localToDB()
+	callback(rowNum, colNum,newNum,colorOfThisStep); // localToDB()
 }	
 
-function localToDB(id,stepNum,colorOfThisStep) {
-writeStepToDB(id,stepNum);
-writeToDB(id,colorOfThisStep);
+function localToDB(rowNum, colNum,stepNum,colorOfThisStep) {
+writeStepToDB(rowNum, colNum,stepNum,dbToDiv);
+writeToDB(rowNum, colNum,colorOfThisStep);
 }
 
-function writeStepToDB(id,stepNum) {
-	var numStr = stepNum.toString();
-	if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-	xmlhttp.open("GET", "addOneStepNumToDB.php?msg=" + id + numStr, true);	
-	xmlhttp.send();
-}
-
-function writeToDB(id,colorOfThisStep) {
+function writeToDB(rowNum, colNum,colorOfThisStep) {
+	var id = createTdId(rowNum, colNum);
 	document.getElementById("testResult").innerHTML = "writeToDB.php?msg=" + id + colorOfThisStep;
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -293,16 +279,10 @@ function writeToDB(id,colorOfThisStep) {
 	xmlhttp.open("GET", "writeToDB.php?msg=" + id + colorOfThisStep, true);
 	xmlhttp.send();
 }
-/*END OF THE CODE FOR THE MOVES******************************************************/
 
-/*********************************************************************************
-*Dynamically update the board*/
-function realtimeupdate() {
-	//setInterval is a function that repeat an operation in a specified interval(in milliseconds).
-   myVar = setInterval(detectStepNum,1000);
-}
-
-function detectStepNum() {
+function writeStepToDB(rowNum, colNum,stepNum,callback) {
+	var id = createTdId(rowNum, colNum);
+	var numStr = stepNum.toString();
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
             xmlhttp = new XMLHttpRequest();
@@ -313,17 +293,33 @@ function detectStepNum() {
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
 		    //html tag with id "info" is set as target of this function
-		         var resString = this.responseText;
-		      	 var dbStr = resString.trim();
-		      	 var dbNum = parseInt(dbStr);
-		      	 var localStr = document.getElementById("stepNum").innerText;
-		      	 var localNum = parseInt(localStr);
-		      	 if (dbNum-localNum>1) {}
-		      	 
-		      	 
-		      	 
-		      	callback(rowNum,colNum,localToDB); // divToLocal()
-   				//var res = 123;//this.responseText;
+		         //var res = this.responseText;
+		      	//document.getElementById("testResult").innerHTML = res;
+		      	if (callback) {
+		      		callback(restartAutoUpdat); //dbToDiv()
+		      	}
+
+            }
+			};
+	xmlhttp.open("GET", "addOneStepNumToDB.php?msg=" + id + numStr, true);	
+	xmlhttp.send();
+}
+
+function dbToDiv(callback) {
+	if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+		    //html tag with id "info" is set as target of this function
+		         var res = this.responseText;
+		      	document.getElementById("stepNum").innerHTML = res;
+		      	
+		      	callback();//restartAutoUpdat
             }
 			};
 	//calls the opdb.php file, which is in the save server folder.
@@ -331,6 +327,96 @@ function detectStepNum() {
 	xmlhttp.send();
 }
 
+function restartAutoUpdat() {
+	autoUpdatPause = false; 
+}
+
+function redDot(rowNum,colNum) {
+	var id = createTdId(rowNum, colNum);
+	document.getElementById(id).style.color = "red";
+	document.getElementById(PreviousMoveID).style.color = "rgba(0, 0, 0, 0)";
+	PreviousMoveID = id;
+}
+
+
+function getLocaState(rowNum,colNum) {
+	var positionID = createTdId(rowNum, colNum);
+	var localState = document.getElementById(positionID+"d").innerText;
+   document.getElementById("clear").innerHTML = localState;
+   return localState;
+}
+/*END OF THE CODE FOR THE MOVES******************************************************/
+
+/*********************************************************************************
+*Dynamically update the board*/
+
+function realtimeupdate() {
+	//setInterval is a function that repeat an operation in a specified interval(in milliseconds).
+   setInterval(pauseControl,100);
+}
+/*
+function pauseTest() {
+	if (autoUpdatPause == false) {
+		testIndex += 1;
+		document.getElementById("realTimestepNum").innerHTML = testIndex;
+	}
+}*/
+
+function pauseControl(){
+	if (autoUpdatPause == false) {
+		autoStepNumToDiv(compare);
+	}
+}
+
+function autoStepNumToDiv(callback) {
+	if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+		         var res = this.responseText;
+		      	document.getElementById("realTimestepNum").innerHTML = res;
+					var str = document.getElementById("realTimestepNum").innerText;
+					var numStr = str.substring(5);
+					var getNum = parseInt(numStr);
+					document.getElementById("stepNumDisplay").innerHTML = numStr;
+					if (getNum % 2 == 0) {
+						document.getElementById("color").style.color = "black";
+					} else {
+						document.getElementById("color").style.color = "white";
+					}
+		      	callback();//compare()
+            }
+			};
+	//calls the opdb.php file, which is in the save server folder.
+	xmlhttp.open("GET", "readFromStepNum.php", true);
+	xmlhttp.send();
+}
+
+function compare() {
+	var realtimeMsg = document.getElementById("realTimestepNum").innerText;
+	var localMsg= document.getElementById("stepNum").innerText;
+	if (realtimeMsg!=localMsg) {
+		var id = realtimeMsg.substring(0,5);
+		var stepMumStr = realtimeMsg.substring(5);
+		var rowNumStr = realtimeMsg.substring(1,3);
+		var colNumStr = realtimeMsg.substring(3,5);
+		var stepMum = parseInt(stepMumStr);
+		var rowNum = parseInt(rowNumStr);
+		var colNum = parseInt(colNumStr);
+		if (stepMum==0) {
+			clearLocalBoard();
+		}else {
+		updatePosition(rowNum,colNum);
+      redDot(rowNum,colNum);
+		}
+		document.getElementById("stepNum").innerHTML = realtimeMsg;
+	}
+}
 
 /*************************************************************************************/
 
@@ -340,8 +426,9 @@ function startPage() {
 	 injectTableCode();/*Create the Go game board*/
     fitSize();/*Fit the container of the Go game board fit the size of the window*/
     editGrid();
+    dbToDiv(restartAutoUpdat);
+    realtimeupdate()
     // The order of these functions are important. You can't operate on code that hasn't been generated.
 }
-
  
         
