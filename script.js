@@ -60,7 +60,7 @@ var myVar;
 // This function is called when the page is loaded
 function stopWatch() {
 	//setInterval is a function that repeat an operation in a specified interval(in milliseconds).
-    myVar = setInterval(getRandom, 250);
+   myVar = setInterval(getRandom, 250);
 	myVar = setInterval(getDate, 250);
 	myVar = setInterval(getData, 1000);
 	myVar = setInterval(getInfo, 1000);
@@ -130,5 +130,63 @@ function getInfo() {
 	xmlhttp.open("GET", "getInfo.php", true);
 	xmlhttp.send();
 }
+/***************************************************************
+*
+*
+*
+*********************************************************/
+function dbOpr(){
+	readFromStepNum(calculation);
+}
 
+function calculation(callback) { // NAN problem
+	var res = document.getElementById("fromDB").innerText;
+	var getNum = parseInt(res);
+	var afterCal = getNum + 1;
+	//var afterCalStr = getNum.toString();
+	document.getElementById("afterCal").innerHTML = afterCal;
+	callback(afterCal); // addOneStepNumToDB()
+}
+
+function addOneStepNumToDB(num) {
+	var numStr = num.toString();
+	if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+		xmlhttp.open("GET", "addOneStepNumToDB.php?msg=" + numStr, true);	
+	xmlhttp.send();
+}
+
+
+
+function readFromStepNum(callback) 
+	{
+	if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+		    //html tag with id "info" is set as target of this function
+		         var resString = this.responseText;
+		      	document.getElementById("fromDB").innerHTML = resString.trim();
+					callback(addOneStepNumToDB); // calculation()
+   				//var res = 123;//this.responseText;
+            }
+			};
+	//calls the opdb.php file, which is in the save server folder.
+	xmlhttp.open("GET", "readFromStepNum.php", true);
+	xmlhttp.send();
+	}
+	
+	
+
+/************************************************************/
 window.onload = stopWatch;

@@ -32,13 +32,19 @@ Detailed documentation is at the end of this file
         </td>
         <td id="frame2"><!--This is the container of the control panel-->
 <div id="controlPanel">
-<h1>控制台</h1>
-<p id="stepNum"></p>
+<div style="font-size:200%;">手数</div>
+<div >StepNum</div>
+<div style="font-size:200%;" id ="stepNumDisplay">0</div>
+<div id = "color" style="font-size:600%;">•</div>
+<p id="stepNum">0</p> <!--Can't hide!-->
+<p id="realTimestepNum">0</p><!--Difference btween visibility and display-->
 <p id="clear">清盘Clearboard</p>
-<button type="button" onclick="clearBoard();">清盘Clearboard</button>
+<button id="clearBoard" type="button" onclick="clearBoard();">清盘Clearboard</button>
 <p id="testResult">Test result</b>
 </p>
-<button type="button" onclick="testButton();">Test Button</button>
+
+<button id="testButton" type="button" onclick="testButton();">Test Button</button>
+
 </div>     
         </td>
         </tr>

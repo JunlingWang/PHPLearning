@@ -5,17 +5,14 @@
 </head>
 <body>
 <?php
-
-
 $msg = $_REQUEST["msg"];// receive the parameter n from the JavaScript code
 $id = substr($msg,0,5);
 $step = substr($msg,5);
-$stepNum = (int)$step;
-// Make database connection.
 
+// Make database connection.
 $writeComplete = FALSE;
 $writeAttemptTime = 1;
-while($writeComplete == FALSE && $writeAttemptTime < 1000) {
+while($writeComplete == FALSE && $writeAttemptTime < 10) {
 	$mysqli = new mysqli("localhost", "wangjunling", "ma!XR!04", "gogame");
 	// The 4th parameter is the name of the database. It is important to specify
 	// the name of the database because there might be several databases under on username.
@@ -24,12 +21,13 @@ while($writeComplete == FALSE && $writeAttemptTime < 1000) {
 	} else {
 		 echo "DBsuccessful";
 	}
-   
-	   $editRow = "UPDATE History SET stepNum = " . $stepNum . ";";
+     
+	   $editRow = "UPDATE History SET stepNum = " . $step . ", PositionID = '" . $id . "';";
 			// Pay attention on the single quotation marks around the double quotation marks
 			// around $positionID
 		if ($mysqli->query($editRow) === TRUE) {
     				$result = "stepNumWrite successful";
+    				$writeComplete = TRUE;
 		} else {
 	   	$result = "stepNumWriteError";
 	   	$writeAttemptTime += 1;

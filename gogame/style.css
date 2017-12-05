@@ -33,9 +33,32 @@ table#board {
 }
 
 .tdElement{
-	//height:100%;
-   color:snow;
 	background-color: gray;
 	background-image: url("img/middleempty.png");
 	background-size: 100% 100%; 
+	color: rgba(0, 0, 0, 0);
+	text-align: center;
+	font-size: 16px;
 }
+
+.divElement{
+	font-size: 0px;
+}
+
+td.tdElement:hover{
+	opacity: 0.3;
+}
+
+td.tdElement:active{
+	opacity: 1;
+}
+
+#clear, #testResult {
+visibility: hidden;
+}
+
+#stepNum, #realTimestepNum {
+font-size: 0;
+}
+
+
