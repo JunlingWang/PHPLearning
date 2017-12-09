@@ -53,6 +53,7 @@ td.tdElement:active{
 	opacity: 1;
 }
 
+/*Hide the test display area*/
 #clear, #testResult {
 visibility: hidden;
 }

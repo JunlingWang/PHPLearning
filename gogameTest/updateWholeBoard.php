@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<!--resetBoardDatabase.php-->
-<!--This file is for resetting the board database.-->
 <html>
 <head>
 </head>
@@ -25,7 +23,7 @@ while($updateComplete == FALSE && $updatAttemptTime < 1000) {
 		$res = $mysqli->query("SELECT * FROM Board");
 		if ($res->num_rows > 0){
     		while($row = $res->fetch_assoc()) {
-    			//NOT FINISHED
+    			//This function  is NOT FINISHED and not in used
        		//echo $row['State'];
        		//$updateComplete = TRUE;
     		}

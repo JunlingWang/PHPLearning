@@ -23,7 +23,6 @@ while($updateComplete == FALSE && $updatAttemptTime < 100) {
 		 echo NULL;
 	}
 */
-
 		$res = $mysqli->query("SELECT * FROM History");
 		if ($res->num_rows > 0){
     		while($row = $res->fetch_assoc()) {

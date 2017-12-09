@@ -11,6 +11,8 @@ $state = substr($msg,5);
 // Make database connection.
 $writeComplete = FALSE;
 $writeAttemptTime = 1;
+// This loop is to guarantee 100% writing success.
+// It keeps running until it's successful or reaches 50 times, which is enough.
 while($writeComplete == FALSE && $writeAttemptTime < 50) {
 	$mysqli = new mysqli("localhost", "wangjunling", "ma!XR!04", "gogame");
 	// The 4th parameter is the name of the database. It is important to specify
@@ -20,7 +22,6 @@ while($writeComplete == FALSE && $writeAttemptTime < 50) {
 	} else {
 		 echo "DBsuccessful";
 	}
-   
 	   $editRow = "UPDATE Board SET State = '" . $state . "' WHERE PositionID = '" . $id . "';";
 			// Pay attention on the single quotation marks around the double quotation marks
 			// around $positionID
@@ -29,17 +30,17 @@ while($writeComplete == FALSE && $writeAttemptTime < 50) {
 			$checkRes = $mysqli->query("SELECT State FROM Board WHERE PositionID='".$id."'");
 			if ($checkRes->num_rows > 0){
     			while($row = $res->fetch_assoc()) {
-    				if($check == $state) {
-    				$writeComplete = TRUE;
-    				$result = "Edit successful";
+    				if($check == $state) { // Check if writing is successful.
+    				$writeComplete = TRUE; // If it is, end the loop.
+    				$result = "Edit successful"; // for test
 					}else {
-			   		$result = "Edit Error1";
+			   		$result = "Edit Error1"; // for test
 	   				$writeAttemptTime += 1;	
 					}
 			  	}
 			 }else{
-    			$result = "Edit Error2";
-	   		$writeAttemptTime += 1;			
+    			$result = "Edit Error2"; // for test
+	   		$writeAttemptTime += 1;	// to avoid infinite loop	
 			}
 		}
 echo $id . $result;

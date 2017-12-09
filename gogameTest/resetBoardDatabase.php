@@ -6,7 +6,9 @@
 </head>
 <body>
 <?php
-$boardSize = 19;
+// If the board's html with a board size smaller than 19,  
+// It only use a part of the database, but it will work well.
+$boardSize = 19; 
 // Make database connection.
 $mysqli = new mysqli("localhost", "wangjunling", "ma!XR!04", "gogame");
 // The 4th parameter is the name of the database. It is important to specify

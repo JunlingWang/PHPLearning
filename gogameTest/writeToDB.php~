@@ -22,6 +22,7 @@ while($writeComplete == FALSE && $writeAttemptTime < 50) {
 	} else {
 		 echo "DBsuccessful";
 	}
+   
 	   $editRow = "UPDATE Board SET State = '" . $state . "' WHERE PositionID = '" . $id . "';";
 			// Pay attention on the single quotation marks around the double quotation marks
 			// around $positionID

@@ -1,13 +1,9 @@
 <!DOCTYPE html>
-<!--resetBoardDatabase.php-->
-<!--This file is for resetting the board database.-->
 <html>
 <head>
 </head>
 <body>
 <?php
-$id = $_REQUEST["id"];// receive the parameter n from the JavaScript code
-
 $updateComplete = FALSE;
 $updatAttemptTime = 1;
 // This loop is to guarantee that if the database visit fails,
@@ -24,11 +20,12 @@ while($updateComplete == FALSE && $updatAttemptTime < 1000) {
 	} else {
 		 echo "DB for update successful";
 	}
-		$res = $mysqli->query("SELECT * FROM Board WHERE PositionID='".$id."'");
+		$res = $mysqli->query("SELECT * FROM Board");
 		if ($res->num_rows > 0){
     		while($row = $res->fetch_assoc()) {
-       		echo $row['State'];
-       		$updateComplete = TRUE;
+    			//This function  is NOT FINISHED
+       		//echo $row['State'];
+       		//$updateComplete = TRUE;
     		}
 		}else{
 		echo "No" . $updatAttemptTime;

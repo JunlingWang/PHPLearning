@@ -37,8 +37,9 @@ Detailed documentation is at the end of this file
 <div >StepNum</div>
 <div style="font-size:200%;" id ="stepNumDisplay">0</div>
 <div id = "color" style="font-size:600%;">•</div>
-<p id="stepNum">0</p> <!--Can't hide!-->
-<p id="realTimestepNum">0</p><!--Difference btween visibility and display-->
+<p id="stepNum">0</p> <!--Can't hide! or the data can't be read.-->
+<p id="realTimestepNum">0</p><!--Can't hide! or the data can't be read.-->
+<!--See below: how to hide an active element-->
 <p id="clear">清盘Clearboard</p>
 <button id="clearBoard" type="button" onclick="clearBoard();">清盘Clearboard</button>
 <p id="testResult">Test result</b>
@@ -54,7 +55,12 @@ Detailed documentation is at the end of this file
 
 </body>
 </html>
-
+<!--How to hide an active element
+ You can't hide an active elment visibility and display
+If you use "visibility: hidden" or "Display: none", the 
+data in the element cannot be detected.
+The only right way to do this is to set the font size zero.
+-->
 
 <!--
 PHP代码是运行在服务器端的，html和Javascript是运行在客户端的。

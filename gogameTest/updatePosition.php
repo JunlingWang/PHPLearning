@@ -24,8 +24,6 @@ while($updateComplete == FALSE && $updatAttemptTime < 1000) {
 	} else {
 		 echo "DB for update successful";
 	}
-
-
 		$res = $mysqli->query("SELECT * FROM Board WHERE PositionID='".$id."'");
 		if ($res->num_rows > 0){
     		while($row = $res->fetch_assoc()) {
