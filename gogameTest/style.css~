@@ -53,9 +53,11 @@ td.tdElement:active{
 	opacity: 1;
 }
 
-#clear, #testResult {
+/*Hide the test display area
+#clear, #testResult, #boardStrContainer {
 visibility: hidden;
 }
+*/
 
 #stepNum, #realTimestepNum {
 font-size: 0;

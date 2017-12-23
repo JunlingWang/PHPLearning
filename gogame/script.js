@@ -4,7 +4,7 @@ testIndex = 0;
 PreviousMoveID ="i0000";
 
 function testButton() {
-    getLocaState(0,0);
+    updateWholeBoard();
 }
 
 //Used to test database operation, no practical use.
@@ -164,6 +164,7 @@ function clearBoard(){
 	 autoUpdatPause = true; // Temporarily stop auto update while the database is to be updated.
     document.getElementById("clear").innerHTML = "It works"; // For testing
     writeStepToDB(0, 0,0,dbToDiv); // update the History table in the database
+    resetBoardDatabase();
     clearLocalBoard(); 
 }
 
@@ -183,7 +184,7 @@ function changeLocalState(positionArray,resultState) { // positionArray is in th
 	document.getElementById(positionID + "d").innerHTML = resultState; // Edit the div content.
 }
 
-// Not in use since this function uses up too much resources
+// Reset the whole board's state to empty.
 function resetBoardDatabase() {
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -234,16 +235,37 @@ function updatePosition(rowNum, colNum) {
 	xmlhttp.send();
 }
 
-// Not in use as it's too resource consuming.
+// Read the whole database and update the whole local board.
 function updateWholeBoard() {
-	for (i = 0; i < tableSize; i++) {
-		for (j = 0; j < tableSize; j++) { 
-			updatePosition(i, j);
-   	}
-
-	}
+		if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+               var res = this.responseText; // What is echoed by the PHP file
+               var resStr = res.toString(); // The returned is not string before converting.
+               document.getElementById("boardStr").innerHTML = resStr; // Put the msg to a div
+               var string = document.getElementById("boardStr").innerHTML // Extract from the div
+               var str = (string.toString()).trim(); // remove useless overhead with trim()
+               for (var i = 0; i<str.length; i = i + 10){  // The length of the massage for each position is 10
+    					var state = str.substring(i+5, i+10);
+    					if (state != 'empty') {
+							var id = str.substring(i, i + 5);
+							document.getElementById("clear").innerHTML = id;
+							var rowNum = Number(id.substring(1, 3)); //i0000
+							var colNum = Number(id.substring(3));  //i0000
+							changeLocalState([rowNum,colNum],state);
+						}
+    				}
+            }
+	};  
+	xmlhttp.open("GET", "updateWholeBoard.php", true);
+	xmlhttp.send();
 }
-
 /*
 * Callback functions are widely used in the following block.
 * A callback function is a function used as a parameter of another function.
@@ -257,6 +279,7 @@ function updateWholeBoard() {
 function makeAMove(rowNum,colNum) {
 	divToLocal(rowNum,colNum,localToDB);// The last parameter is a callback function
 	redDot(rowNum,colNum);
+	moveSound();
 }
 	
 function divToLocal(rowNum,colNum,callback) {
@@ -409,6 +432,7 @@ function autoStepNumToDiv(callback) {
 					document.getElementById("stepNumDisplay").innerHTML = numStr;
 					// Set the color of the stone on the control panel on the right of the board,
 					// which is actually a dot. So you can simply change its font color.
+					// Its color is determined solely by step number.
 					if (getNum % 2 == 0) { 
 						document.getElementById("color").style.color = "black";
 					} else {
@@ -440,21 +464,31 @@ function compare() {
 		}else {
 		updatePosition(rowNum,colNum);
       redDot(rowNum,colNum);
+      moveSound();
 		}
 		document.getElementById("stepNum").innerHTML = realtimeMsg;
 	}
 }
 
 /*************************************************************************************/
+/*SOUND EFFECT*********************************************************************/
 
+function moveSound() { 
+	var x = document.getElementById("myAudio"); 
+	document.getElementById("testResult").innerHTML = "Sound";
+   x.play(); 
+} 
+
+/*SOUND EFFECT ENDS****************************************************************/
 
 /*Functions inside this function will be called when the window is opened*/
 function startPage() {
 	 injectTableCode();/*Create the Go game board*/
     fitSize();/*Fit the container of the Go game board fit the size of the window*/
     editGrid();
+    updateWholeBoard();
     dbToDiv(restartAutoUpdat);
-    realtimeupdate()
+    realtimeupdate();
     // The order of these functions are important. You can't operate on code that hasn't been generated.
 }
  

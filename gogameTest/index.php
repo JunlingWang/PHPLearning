@@ -6,7 +6,7 @@ Detailed documentation is at the end of this file
 <!DOCTYPE html>
 <html>
 <head>
-<title> Go Game Test</title>
+<title>围棋</title>
 <!--import JavaScript file-->
 <script type="text/javascript" src="script.js"></script>
 <!--import css file-->
@@ -15,7 +15,15 @@ Detailed documentation is at the end of this file
 </head>
 
 <body onload="startPage()"> <!--When the page is loaded, call this JS function-->
-
+<!--Audio element, for the sound-->
+<audio id="myAudio">
+  <source src="go.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+<audio id="myAudio">
+  <source src="take.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 <!--This element is to take the height of the window, so as to
  vertically align the board
  see function fitSize() in script.js-->
@@ -47,12 +55,13 @@ Detailed documentation is at the end of this file
 <!--
 <button id="testButton" type="button" onclick="testButton();">Test Button</button>
 -->
+<!--contain the str of board infomation when update the whole board-->
+<div id="boardStr"></div>
 </div>     
         </td>
         </tr>
   </tbody>
 </table>
-
 </body>
 </html>
 <!--How to hide an active element

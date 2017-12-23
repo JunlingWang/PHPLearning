@@ -4,6 +4,7 @@
 </head>
 <body>
 <?php
+$boardSize = 18;
 $updateComplete = FALSE;
 $updatAttemptTime = 1;
 // This loop is to guarantee that if the database visit fails,
@@ -16,28 +17,43 @@ while($updateComplete == FALSE && $updatAttemptTime < 1000) {
 	// the name of the database because there might be several databases under on username.
 
 	if ($mysqli->connect_errno) {
-   	 echo "Failed";
-	} else {
-		 echo "DB for update successful";
-	}
-		$res = $mysqli->query("SELECT * FROM Board");
-		if ($res->num_rows > 0){
-    		while($row = $res->fetch_assoc()) {
-    			//This function  is NOT FINISHED and not in used
-       		//echo $row['State'];
-       		//$updateComplete = TRUE;
-    		}
-		}else{
 		echo "No" . $updatAttemptTime;
 		$updatAttemptTime += 1;
+	} else {
+		$updateComplete = TRUE;
 	}
+	$msgStr = '';
+	for ($i = 0; $i <= $boardSize; $i++) {
+		for ($j = 0; $j <= $boardSize; $j++) {
+			$id = createID($i,$j);
+			$res = $mysqli->query("SELECT * FROM Board WHERE PositionID='".$id."'");
+			if ($res->num_rows > 0){
+    			while($row = $res->fetch_assoc()) {
+       			$posInfo = $id.(string)$row['State']; // Form the position msg
+       			$msgStr .= $posInfo; // Append the position msg
+    			}
+			}
+		}
+	} 
+	echo $msgStr; // This is a string with information of all the occupied positions
 	$mysqli->close();
 }
 
-
-
-
-
+/*Create ID string from row and column numbers*/
+function createID($rowNum,$colNum) {
+	if($rowNum<10) {
+		$rowStr = '0'.(string)$rowNum;
+	}else {
+		$rowStr = (string)$rowNum;	
+	}
+	if($colNum<10) {
+		$colStr = '0'.(string)$colNum;
+	}else {
+		$colStr = (string)$colNum;	
+	}
+	$id = 'i'.$rowStr.$colStr;
+	return $id;
+} 
 ?>
 
 </body>

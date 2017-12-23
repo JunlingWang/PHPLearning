@@ -4,7 +4,7 @@ testIndex = 0;
 PreviousMoveID ="i0000";
 
 function testButton() {
-    getLocaState(0,0);
+    updateWholeBoard();
 }
 
 //Used to test database operation, no practical use.
@@ -95,7 +95,7 @@ function editGrid() {
 		for (j = 0; j < tableSize; j++) { // Different indexes (like i,j,k) should be used in multi-layer loops.
 			var positionID = createTdId(i,j); 
 			var posCode = generatePosCode([i,j]);
-			if (posCode != 'middle') {
+			if (posCode != 'middle') { // 'middle' is default, no need for updateing
 				document.getElementById(positionID).style.backgroundImage = 'url("img/' + posCode + 'empty.png")';
 			}
 
@@ -164,6 +164,7 @@ function clearBoard(){
 	 autoUpdatPause = true; // Temporarily stop auto update while the database is to be updated.
     document.getElementById("clear").innerHTML = "It works"; // For testing
     writeStepToDB(0, 0,0,dbToDiv); // update the History table in the database
+    resetBoardDatabase();
     clearLocalBoard(); 
 }
 
@@ -183,7 +184,7 @@ function changeLocalState(positionArray,resultState) { // positionArray is in th
 	document.getElementById(positionID + "d").innerHTML = resultState; // Edit the div content.
 }
 
-// Not in use since this function uses up too much resources
+// Reset the whole board's state to empty.
 function resetBoardDatabase() {
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -203,6 +204,7 @@ function resetBoardDatabase() {
 	xmlhttp.send();
 }
 
+// Update a specific position's background image
 function updatePosition(rowNum, colNum) {
 	if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -229,29 +231,59 @@ function updatePosition(rowNum, colNum) {
             }
 	};  
 	var id = createTdId(rowNum, colNum);
-	//calls the opdb.php file, which is in the save server folder.
 	xmlhttp.open("GET", "updatePosition.php?id=" + id, true);
 	xmlhttp.send();
 }
 
+// Read the whole database and update the whole local board.
 function updateWholeBoard() {
-	for (i = 0; i < tableSize; i++) {
-		for (j = 0; j < tableSize; j++) { // Different indexes (like i,j,k) should be used in multi-layer loops.
-			updatePosition(i, j);
-			
-   	}
-
-	}
+		if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+               var res = this.responseText; // What is echoed by the PHP file
+               var resStr = res.toString(); // The returned is not string before converting.
+               document.getElementById("boardStr").innerHTML = resStr; // Put the msg to a div
+               var string = document.getElementById("boardStr").innerHTML // Extract from the div
+               var str = (string.toString()).trim(); // remove useless overhead with trim()
+               for (var i = 0; i<str.length; i = i + 10){  // The 
+    					var state = str.substring(i+5, i+10);
+    					if (state != 'empty') {
+							var id = str.substring(i, i + 5);
+							document.getElementById("clear").innerHTML = id;
+							var rowNum = Number(id.substring(1, 3)); //i0000
+							var colNum = Number(id.substring(3));  //i0000
+							changeLocalState([rowNum,colNum],state);
+						}
+    				}
+            }
+	};  
+	xmlhttp.open("GET", "updateWholeBoard.php", true);
+	xmlhttp.send();
 }
-
-/***************************************************************************************************/
+/*
+* Callback functions are widely used in the following block.
+* A callback function is a function used as a parameter of another function.
+* JavaScript support this kind of syntax because functions are considered as objects.
+* The purpose of using callback is to make sure one function is not called until the earlier one
+* finishes running.
+* JavaScript is an event-based language, which means if an argument need to wait for response, such
+* as database query, the next line will be executed before the data is back.
+* callback function can be used to avoid such errors. 
+**************************************************************************************************/
 function makeAMove(rowNum,colNum) {
-	divToLocal(rowNum,colNum,localToDB);
+	divToLocal(rowNum,colNum,localToDB);// The last parameter is a callback function
 	redDot(rowNum,colNum);
+	moveSound();
 }
 	
 function divToLocal(rowNum,colNum,callback) {
-	var res = document.getElementById("stepNum").innerText;
+	var res = document.getElementById("stepNum").innerText; // A string with format of "i0000125"
 	var numStr = res.substring(5);
 	var getNum = parseInt(numStr);
 	var colorOfThisStep = "black";
@@ -263,12 +295,12 @@ function divToLocal(rowNum,colNum,callback) {
 		}	
 	}else {
 			colorOfThisStep = "empty";
-			getNum -= 1;
+			getNum -= 1; // removing a stone is not a move, subtract one to neutralize the adding
 	}
    changeLocalState([rowNum, colNum], colorOfThisStep);
 	var newNum = getNum + 1;
 	var id = createTdId(rowNum, colNum);
-	callback(rowNum, colNum,newNum,colorOfThisStep); // localToDB()
+	callback(rowNum, colNum,newNum,colorOfThisStep); // localToDB() is called after this function is finished
 }	
 
 function localToDB(rowNum, colNum,stepNum,colorOfThisStep) {
@@ -288,8 +320,7 @@ function writeToDB(rowNum, colNum,colorOfThisStep) {
         }
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-		//html tag with id "info" is set as target of this function
-       document.getElementById("testResult").innerHTML = id;// + this.responseText;
+       			document.getElementById("testResult").innerHTML = id;
             }
 	};  
 	xmlhttp.open("GET", "writeToDB.php?msg=" + id + colorOfThisStep, true);
@@ -308,9 +339,7 @@ function writeStepToDB(rowNum, colNum,stepNum,callback) {
         }
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-		    //html tag with id "info" is set as target of this function
-		         //var res = this.responseText;
-		      	//document.getElementById("testResult").innerHTML = res;
+		         //Callback should be in this if statement, or it doesn't work.
 		      	if (callback) {
 		      		callback(restartAutoUpdat); //dbToDiv()
 		      	}
@@ -331,14 +360,12 @@ function dbToDiv(callback) {
         }
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-		    //html tag with id "info" is set as target of this function
+		    //html tag with id "stepNum" is set as target of this function
 		         var res = this.responseText;
 		      	document.getElementById("stepNum").innerHTML = res;
-		      	
 		      	callback();//restartAutoUpdat
             }
 			};
-	//calls the opdb.php file, which is in the save server folder.
 	xmlhttp.open("GET", "readFromStepNum.php", true);
 	xmlhttp.send();
 }
@@ -349,9 +376,9 @@ function restartAutoUpdat() {
 
 function redDot(rowNum,colNum) {
 	var id = createTdId(rowNum, colNum);
-	document.getElementById(id).style.color = "red";
-	document.getElementById(PreviousMoveID).style.color = "rgba(0, 0, 0, 0)";
-	PreviousMoveID = id;
+	document.getElementById(id).style.color = "red"; // Display a red dot on the newly put stone,
+	document.getElementById(PreviousMoveID).style.color = "rgba(0, 0, 0, 0)"; // Get rid of the one on the previous one,
+	PreviousMoveID = id; // Make the last stone "previous".
 }
 
 
@@ -363,6 +390,8 @@ function getLocaState(rowNum,colNum) {
 }
 /*END OF THE CODE FOR THE MOVES******************************************************/
 
+
+
 /*********************************************************************************
 *Dynamically update the board*/
 
@@ -370,6 +399,7 @@ function realtimeupdate() {
 	//setInterval is a function that repeat an operation in a specified interval(in milliseconds).
    setInterval(pauseControl,100);
 }
+
 /*
 function pauseTest() {
 	if (autoUpdatPause == false) {
@@ -400,7 +430,10 @@ function autoStepNumToDiv(callback) {
 					var numStr = str.substring(5);
 					var getNum = parseInt(numStr);
 					document.getElementById("stepNumDisplay").innerHTML = numStr;
-					if (getNum % 2 == 0) {
+					// Set the color of the stone on the control panel on the right of the board,
+					// which is actually a dot. So you can simply change its font color.
+					// Its color is determined solely by step number.
+					if (getNum % 2 == 0) { 
 						document.getElementById("color").style.color = "black";
 					} else {
 						document.getElementById("color").style.color = "white";
@@ -416,6 +449,7 @@ function autoStepNumToDiv(callback) {
 function compare() {
 	var realtimeMsg = document.getElementById("realTimestepNum").innerText;
 	var localMsg= document.getElementById("stepNum").innerText;
+	// If realtimeMsg == localMsg, no change of the database happens, hence no need for update.
 	if (realtimeMsg!=localMsg) {
 		var id = realtimeMsg.substring(0,5);
 		var stepMumStr = realtimeMsg.substring(5);
@@ -424,26 +458,37 @@ function compare() {
 		var stepMum = parseInt(stepMumStr);
 		var rowNum = parseInt(rowNumStr);
 		var colNum = parseInt(colNumStr);
+		// If stepNum is zero, its a clear board operation.
 		if (stepMum==0) {
 			clearLocalBoard();
 		}else {
 		updatePosition(rowNum,colNum);
       redDot(rowNum,colNum);
+      moveSound();
 		}
 		document.getElementById("stepNum").innerHTML = realtimeMsg;
 	}
 }
 
 /*************************************************************************************/
+/*SOUND EFFECT*********************************************************************/
 
+function moveSound() { 
+	var x = document.getElementById("myAudio"); 
+	document.getElementById("testResult").innerHTML = "Sound";
+   x.play(); 
+} 
+
+/*SOUND EFFECT ENDS****************************************************************/
 
 /*Functions inside this function will be called when the window is opened*/
 function startPage() {
 	 injectTableCode();/*Create the Go game board*/
     fitSize();/*Fit the container of the Go game board fit the size of the window*/
     editGrid();
+    updateWholeBoard();
     dbToDiv(restartAutoUpdat);
-    realtimeupdate()
+    realtimeupdate();
     // The order of these functions are important. You can't operate on code that hasn't been generated.
 }
  

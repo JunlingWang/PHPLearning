@@ -33,7 +33,7 @@ while($updateComplete == FALSE && $updatAttemptTime < 1000) {
 		}else{
 		echo "No" . $updatAttemptTime;
 		$updatAttemptTime += 1;
-	}
+		}
 	$mysqli->close();
 }
 

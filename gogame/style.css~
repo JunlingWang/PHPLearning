@@ -52,11 +52,13 @@ td.tdElement:hover{
 td.tdElement:active{
 	opacity: 1;
 }
-/*
-#clear, #testResult {
+
+/*Hide the test display area
+#clear, #testResult, #boardStr {
 visibility: hidden;
 }
 */
+
 #stepNum, #realTimestepNum {
 font-size: 0;
 }
